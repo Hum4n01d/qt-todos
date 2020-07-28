@@ -6,17 +6,24 @@ from PySide2 import QtGui, QtQml
 
 from TodosViewModel import TodosViewModel
 from SettingsViewModel import SettingsViewModel
+from TodosListModel import TodosListModel
+
+# App constants
+MODULE_NAME = 'QtTodos'
+MAJOR_VERSION = 0
+MINOR_VERSION = 1
 
 # Enable Ctrl-C to kill
 signal.signal(signal.SIGINT, signal.SIG_DFL)
 
 if __name__ == '__main__':
   # Create QML components from a Python classes
-  # 0 and 1 represent major and minor version numbers for when we import it in QML
-  QtQml.qmlRegisterType(TodosViewModel, 'QtTodos', 0, 1, 'TodosViewModel')
-  QtQml.qmlRegisterType(SettingsViewModel, 'QtTodos', 0, 1, 'SettingsViewModel')
+  # major_version and minor_version represent major and minor version numbers for when we import it in QML
+  QtQml.qmlRegisterType(TodosViewModel, MODULE_NAME, MAJOR_VERSION, MINOR_VERSION, 'TodosViewModel')
+  QtQml.qmlRegisterType(SettingsViewModel, MODULE_NAME, MAJOR_VERSION, MINOR_VERSION, 'SettingsViewModel')
+  QtQml.qmlRegisterType(TodosListModel, MODULE_NAME, MAJOR_VERSION, MINOR_VERSION, 'TodosListModel')
 
-  # Use render loop that supports persistent 60fps
+  # Use render loop that supports persistent 6major_versionfps
   os.environ['QSG_RENDER_LOOP'] = 'windows' 
 
   # Create system app

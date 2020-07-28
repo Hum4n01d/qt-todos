@@ -9,12 +9,15 @@ Item {
 
   signal openSettingsPage
 
-  ListView {
-    id: listView
+  // Initialize the python TodosListModel class
+  TodosListModel {
+    id: listModel
 
-    clip: true
-    spacing: 1
+    // viewModel is a property of the Todos component which is passed to it in main.qml as TodosViewModel
+    todosReference: viewModel
+  }
 
+  ScrollView {
     anchors {
       top: parent.top
       right: parent.right
@@ -24,27 +27,39 @@ Item {
       bottomMargin: 8
     }
 
-    delegate: Item {
-      width: listView.width
-      height: 44
+    ListView {
+      id: listView
 
-      Label {
-        text: model.index
+      clip: true
+      spacing: 1
 
-        anchors {
-          left: parent.left
-          verticalCenter: parent.verticalCenter
-          
-          leftMargin: 8
+      // model is an attribute for the data source and connects the ListModel to the ListView QML component
+      model: listModel
+
+      delegate: Item {
+        width: listView.width
+        height: 44
+
+        Label {
+          text: model.name
+
+          anchors {
+            left: parent.left
+            verticalCenter: parent.verticalCenter
+            
+            leftMargin: 8
+          }
         }
-      }
 
-      CheckBox {
-        anchors {
-          right: parent.right
-          verticalCenter: parent.verticalCenter
+        CheckBox {
+          checked: model.isChecked
           
-          rightMargin: 8
+          anchors {
+            right: parent.right
+            verticalCenter: parent.verticalCenter
+            
+            rightMargin: 8
+          }
         }
       }
     }

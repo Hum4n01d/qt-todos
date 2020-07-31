@@ -10,12 +10,14 @@ class TodosViewModel(QtCore.QObject):
   post_insert_todo = QtCore.Signal()
   pre_clear_todos = QtCore.Signal()
   post_clear_todos = QtCore.Signal()
+  todo_is_checked_changed = QtCore.Signal(int)
 
   def __init__(self):
     QtCore.QObject.__init__(self)
 
     self.__new_todo_name = ''
-    self.todos = [Todo(s) for s in ["".join([chr(i+n*100) for i in range(1, 15)]) for n in range(10, 50)]]
+    self.todos = [Todo(s) for s in ["".join([chr(65+i+n) for i in range(1, 15)]) for n in range(1, 40)]]
+  
   def get_new_todo_name(self):
     return self.__new_todo_name
 
@@ -39,7 +41,15 @@ class TodosViewModel(QtCore.QObject):
 
   # A slot is a function we can use in JS in QML
   @QtCore.Slot()
-  def addTodo(self): # Camel case because it will be used as a js function
+  def toggleFirstTodo(self): # Camel case because it will be used as a js function
+    # Make sure there is a first todo
+    if len(self.todos) > 0:
+      todo = self.todos[0]
+      todo.is_checked = not todo.is_checked # Toggle the is_checked property
+      self.todo_is_checked_changed.emit(0) # 0 is the index of the changed todo
+
+  @QtCore.Slot()
+  def addTodo(self):
     # Only add a todo if the field validation passes
     if self.get_is_valid():
       # Tell the ListView that we are going to add a todo

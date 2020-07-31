@@ -26,7 +26,7 @@ Item {
 
       bottomMargin: 8
     }
-    
+
     ListView {
       id: listView
 
@@ -78,11 +78,22 @@ Item {
       margins: 8
     }
 
-    Button {
-      text: 'Open Settings'
+    Row {
+      spacing: 4
 
-      // Trigger the openSettingsPage signal to run code in the main.qml file
-      onClicked: openSettingsPage()
+      Button {
+        text: 'Open Settings'
+
+        // Trigger the openSettingsPage signal to run code in the main.qml file
+        onClicked: openSettingsPage()
+      }
+
+      Button {
+        text: 'Toggle First Todo'
+
+        // Trigger the toggleFirstTodo slot in TodosViewModel
+        onClicked: viewModel.toggleFirstTodo()
+      }
     }
 
     Row {

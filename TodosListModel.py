@@ -20,6 +20,14 @@ class TodosListModel(QtCore.QAbstractListModel):
   def get_todos_reference(self):
     return self.__todos_reference
 
+  def todo_is_checked_changed_callback(self, row):
+    # Create a QModelIndex from the row number
+    # createIndex is a ListModel class method
+    index = self.createIndex(row, 0) # Column is zero
+
+    # Use the ListModel dataChanged signal to indicate that the UI needs to be updated at this index
+    self.dataChanged.emit(index, index, [self.IS_CHECKED_ROLE]) # Tell the ListModel which row range and roles are being updated
+
   def set_todos_reference(self, value):
     # Only change the view model if there is a new one (don't reload when closing the app)
     if value:
@@ -37,6 +45,9 @@ class TodosListModel(QtCore.QAbstractListModel):
       # QtCore.QModelIndex() is because we don't have a parent list for the ListModel
       self.__todos_reference.pre_clear_todos.connect(lambda: self.beginRemoveRows(QtCore.QModelIndex(), 0, len(self.__todos_reference.todos) - 1)) # Remove all todos from 0 to end
       self.__todos_reference.post_clear_todos.connect(lambda: self.endRemoveRows())
+
+      # Tell the ListModel which row range and roles are being updated
+      self.__todos_reference.todo_is_checked_changed.connect(self.todo_is_checked_changed_callback)
   
   # Override the required roleNames method from the parent ListModel class
   # Camel cased because it's a wrapper for a C++ function
@@ -81,9 +92,10 @@ class TodosListModel(QtCore.QAbstractListModel):
       todo = self.__todos_reference.todos[index.row()] # index is an object with row and column methods
       todo.is_checked = value
 
-      # Use the ListModel dataChanged signal to indicate that the UI needs to be updated at this index
+      # Use the ListModel dataChanged signal to indicate that the UI needs to be updated at this index 
+      # dataChanged requires two QModelIndex arguments and because we are overriding a default class method, they are already in the right format
       self.dataChanged.emit(index, index, [self.IS_CHECKED_ROLE]) # Tell the ListModel which row range and roles are being updated
-
+      
       return True
 
     return False

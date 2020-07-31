@@ -71,7 +71,22 @@ class TodosListModel(QtCore.QAbstractListModel):
           return todo.is_checked
 
     # This is for DisplayRole or if the todos reference doesn't exist
-    return None
+    return None 
+
+  # Override the required setData method from the parent ListModel class
+  def setData(self, index, value, role):
+    # Make sure there is a reference to the TodosViewModel
+    # Only allow changes to the checked value, we can't rename todos from within the todo item UI
+    if self.__todos_reference and role == self.IS_CHECKED_ROLE:
+      todo = self.__todos_reference.todos[index.row()] # index is an object with row and column methods
+      todo.is_checked = value
+
+      # Use the ListModel dataChanged signal to indicate that the UI needs to be updated at this index
+      self.dataChanged.emit(index, index, [self.IS_CHECKED_ROLE]) # Tell the ListModel which row range and roles are being updated
+
+      return True
+
+    return False
 
   # A slot is a function we can use in JS in QML
   @QtCore.Slot()

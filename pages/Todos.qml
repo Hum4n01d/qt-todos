@@ -26,7 +26,7 @@ Item {
 
       bottomMargin: 8
     }
-
+    
     ListView {
       id: listView
 
@@ -53,6 +53,8 @@ Item {
 
         CheckBox {
           checked: model.isChecked
+
+          onClicked: model.isChecked = checked // checked is the CheckBox's checked property
           
           anchors {
             right: parent.right

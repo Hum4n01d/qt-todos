@@ -15,8 +15,7 @@ class TodosViewModel(QtCore.QObject):
     QtCore.QObject.__init__(self)
 
     self.__new_todo_name = ''
-    self.todos = []
-
+    self.todos = [Todo(s) for s in ["".join([chr(i+n*100) for i in range(1, 15)]) for n in range(10, 50)]]
   def get_new_todo_name(self):
     return self.__new_todo_name
 
